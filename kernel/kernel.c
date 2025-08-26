@@ -57,8 +57,6 @@ void term_putc(char c, uint8_t color)
 
     if (term_row >= VGA_ROWS)
     {
-        //term_col = 0;
-        //term_row = 0;
         for (uint8_t colindex = 0; colindex < VGA_COLS; colindex++)
         {
             for (uint8_t i = 0; i < VGA_ROWS; i++) {
@@ -104,11 +102,11 @@ void kernel_main()
     term_print("Line 17\n", 0x0A);
     term_print("Line 18\n", 0x0A);
     term_print("Line 19\n", 0x0A);
-    term_print("Line 20\n", 0x0A);
-    term_print("Line 21\n", 0x0A);
-    term_print("Line 22\n", 0x0A);
-    term_print("Line 23\n", 0x0A);
-    term_print("Line 24\n", 0x0A);
+    term_print("Line 20\n", 0x0B);
+    term_print("Line 21\n", 0x0C);
+    term_print("Line 22\n", 0x0D);
+    term_print("Line 23\n", 0x0E);
+    term_print("Line 24\n", 0x0F);
     term_print("Line 25\n", 0x0A);
 
     
