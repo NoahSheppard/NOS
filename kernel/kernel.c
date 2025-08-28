@@ -83,14 +83,58 @@ unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int count) 
     {
         dest[i] = src[i];
     }
+    return dest; 
 }
 
-void kernel_main() 
+unsigned char *memset(unsigned char *dest, unsigned char val, int count) 
 {
-    term_init();
+    // Add code here to set 'count' bytes in 'dest' to 'val', return dest?
+    for (size_t i = 0; i < count; i++)
+    {
+        dest[i] = val;
+    }
+    return dest; 
+}
 
-    term_print("Hello, World!\n", 0x0A);
-    term_print("This is the start of Linux 2\n", 0x0A);
+unsigned short *memsetw(unsigned short *dest, unsigned short val, int count) 
+{
+    /* Same as above, but this time, we're working with a 16-bit 
+    * 'val' and dest pointer. Your code can be an exact copy of 
+    * the above, provided that your local variables if any, are
+    * unsigned short 
+    */
+    for (size_t i = 0; i < count; i++) 
+    {
+        dest[i] = val;
+    }
+    return dest; 
+}
+
+int strlen(const char *str)
+{
+    /* This loops through a caharacter array 'str', returning how
+    * many characters it needs to check before it finds a 0. 
+    * In simple words, it returns the length in bytyes of a string
+    */
+    size_t count = 0; 
+    while (str[count] != '\0') {
+        count++;
+    }
+    count++;
+    return count; 
+}
+
+// Used to get data from port (for later, I do NOT understand this so far)
+unsigned char importb(unsigned short _port)
+{
+    unsigned char rv;
+    __asm__ __volatile__ ("inb %1, %0": "=a" (rv) : "dN" (_port));
+}
+
+// Opposite of the function above. Still do NOT understand
+void outportb (unsigned short _port, unsigned char _data)
+{
+    __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
 }
 
 void test_terminal_scroll() 
@@ -136,7 +180,40 @@ void test_memcpy()
     /*
     * Hello World!
     * Hello World!
-    * 
+    * Hello World!
+    */
+    // The first one is the source variable decleration
+    // The second one is the dest variable after memcpy() is called to replace it's content
+    // The third one is the return value of memcpy(), which is dest 
+    // As memcpy() -> dest=src, all 3 should be the same 
+    // And works in initial testing, hence memcpy should be working
+}
+
+void test_memset()
+{
+    char *test_char = "H";
+    char *test_char_output[14];
+    char *return_char = memset(*test_char_output, *test_char, 14);
+
+    term_print(test_char, 0x0F);
+    term_print(*test_char_output, 0x0F);
+    term_print(return_char, 0x0F);
+
+    // This should print
+    /*
+    * H[x15][2 random bytes, usually "S|_|" (a white block)]H[x14][2 random bytes]
+    * HHHHHHHHHHHHHHHS|_|HHHHHHHHHHHHHHS|_|
     */
     // And works in initial testing, hence memcpy should be working
+    // Look to memcpy() for better explination
+    // Due to there being no '\n', bugs apply
+    // Not sure if this means it 100% works, will do future testing. 
+}
+
+void kernel_main() 
+{
+    term_init();
+
+    term_print("Hello, World!\n", 0x0F);
+    term_print("This is the start of Linux 2\n", 0x0A);
 }
