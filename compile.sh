@@ -1,6 +1,5 @@
 #!/bin/bash
 
-rm mykernel.iso
 rm out/mykernel.iso
 rm -f out/*.o out/mykernel.elf
 rm -f mykernel.elf
@@ -12,9 +11,6 @@ $HOME/opt/cross/bin/i686-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/kernel.c
 
 echo "Linking"
 $HOME/opt/cross/bin/i686-elf-gcc -ffreestanding -nostdlib -g -T kernel/linker.ld out/start.o out/kernel.o -o mykernel.elf -lgcc
-
-rm iso/boot/kernel.bin
-rm mykernel.iso
 
 cp mykernel.elf iso/boot/kernel.bin
 grub-mkrescue -o out/mykernel.iso iso

@@ -77,12 +77,24 @@ void term_print(const char* str, const uint8_t color)
     }
 }
 
+unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int count) {
+    // copy count bytes of data from src to dest, return dest 
+    for(size_t i=0; i<count; i++) 
+    {
+        dest[i] = src[i];
+    }
+}
+
 void kernel_main() 
 {
     term_init();
 
     term_print("Hello, World!\n", 0x0A);
     term_print("This is the start of Linux 2\n", 0x0A);
+}
+
+void test_terminal_scroll() 
+{
     term_print("Line 1\n", 0x0A);
     term_print("Line 2\n", 0x0A);
     term_print("Line 3\n", 0x0A);
@@ -108,6 +120,23 @@ void kernel_main()
     term_print("Line 23\n", 0x0E);
     term_print("Line 24\n", 0x0F);
     term_print("Line 25\n", 0x0A);
+}
 
-    
+void test_memcpy()
+{
+    char *test_char = "Hello World!\n";
+    char *test_char_output[14];
+    char *return_char = memcpy(*test_char_output, test_char, 14);
+
+    term_print(test_char, 0x0F);
+    term_print(*test_char_output, 0x0F);
+    term_print(return_char, 0x0F);
+
+    // This should print
+    /*
+    * Hello World!
+    * Hello World!
+    * 
+    */
+    // And works in initial testing, hence memcpy should be working
 }
