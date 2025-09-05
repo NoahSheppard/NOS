@@ -246,7 +246,15 @@ void kernel_main()
     idt_install();
     term_print("5. idt_install completed\n", 0x0C);
 
+    term_print("6. Installing ISRS\n", 0x0A);
+    isrs_install();
+    term_print("7. Installed ISRS!\n", 0x0B);
+
     term_print("Hello, World!\n", 0x0F);
     term_print("This is the start of NOS\n", 0x0A);
+
+    int divideByZeroTest = 10;
+    term_putc(divideByZeroTest/0, 0x0A);
+
     while(1) {}
 }

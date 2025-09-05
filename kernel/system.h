@@ -17,5 +17,14 @@ extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsig
 void gdt_install();
 extern void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
 void idt_install();
+void isrs_install();
+void fault_handler();
+struct regs
+{
+    unsigned int gs, fs, es, ds; // pushed the segments last
+    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax; // pushed by 'pusha'
+    unsigned int int_no, err_code; // push $x
+    unsigned int eip, cs, eflags, useresp, ss; // pushed by cpu automatically
+};
 
 #endif
