@@ -1,8 +1,12 @@
 .extern kernel_main
 
 .global start
+
 .global gdt_flush
 .extern _gp
+
+.global idt_load
+.extern idtp
 
 .set MB_MAGIC, 0x1BADB002
 .set MB_FLAGS, (1 << 0) | (1 << 1)
@@ -39,4 +43,8 @@ gdt_flush:
     movw %ax, %ss
     ljmp $0x08, $reload_segments
 reload_segments:
+    ret
+
+idt_load:
+    lidt idtp
     ret

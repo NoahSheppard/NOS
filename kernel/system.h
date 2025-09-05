@@ -15,5 +15,7 @@ extern void term_print(const char* str, const uint8_t color);
 extern void move_csr(void);
 extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
 void gdt_install();
+extern void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
+void idt_install();
 
 #endif

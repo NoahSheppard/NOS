@@ -242,6 +242,10 @@ void kernel_main()
     gdt_install();
     term_print("3. gdt_install() completed\n", 0x0C);
 
+    term_print("4. About to call idt_install()\n", 0x0A);
+    idt_install();
+    term_print("5. idt_install completed\n", 0x0C);
+
     term_print("Hello, World!\n", 0x0F);
     term_print("This is the start of NOS\n", 0x0A);
     while(1) {}
