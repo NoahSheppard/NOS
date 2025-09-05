@@ -1,6 +1,8 @@
 .extern kernel_main
 
 .global start
+.global gdt_flush
+.extern _gp
 
 .set MB_MAGIC, 0x1BADB002
 .set MB_FLAGS, (1 << 0) | (1 << 1)
@@ -19,10 +21,22 @@
     stack_top:
 
 .section .text
-    start:
-        mov $stack_top, %esp
-        call kernel_main
-        hang:
-            cli
-            hlt
-            jmp hang
+start:
+    movl $stack_top, %esp
+    call kernel_main
+hang:
+    cli
+    hlt
+    jmp hang
+
+gdt_flush:
+    lgdt _gp
+    movw $0x10, %ax
+    movw %ax, %ds
+    movw %ax, %es
+    movw %ax, %fs
+    movw %ax, %gs
+    movw %ax, %ss
+    ljmp $0x08, $reload_segments
+reload_segments:
+    ret

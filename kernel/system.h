@@ -13,5 +13,7 @@ extern void term_putc(char c, uint8_t color);
 extern void term_init();
 extern void term_print(const char* str, const uint8_t color);
 extern void move_csr(void);
+extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
+void gdt_install();
 
 #endif

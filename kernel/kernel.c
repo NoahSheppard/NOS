@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdint.h>
+#include "system.h"
 
 #if defined(__linux__) 
     #error "This code must be compiled iwth a cross-compiler"
@@ -23,6 +24,7 @@ unsigned char importb(unsigned short _port)
 {
     unsigned char rv;
     asm volatile ("inb %1, %0": "=a" (rv) : "dN" (_port));
+    return rv;
 }
 
 // Opposite of the function above. Still do NOT understand
@@ -155,7 +157,6 @@ int strlen(const char *str)
     while (str[count] != '\0') {
         count++;
     }
-    count++;
     return count; 
 }
 
@@ -235,7 +236,13 @@ void test_memset()
 void kernel_main() 
 {
     term_init();
+    term_print("1. Terminal initialized\n", 0x0F);
+    
+    term_print("2. About to call gdt_install()\n", 0x0A);
+    gdt_install();
+    term_print("3. gdt_install() completed\n", 0x0C);
 
     term_print("Hello, World!\n", 0x0F);
     term_print("This is the start of NOS\n", 0x0A);
+    while(1) {}
 }
