@@ -233,6 +233,12 @@ void test_memset()
     // Not sure if this means it 100% works, will do future testing. 
 }
 
+void test_divbyzero() {
+    int zerotest = 10/0;
+    term_print((char*)zerotest, 0x0A);
+    term_print("If this prints, ISR didn't fire", 0x0C);
+}
+
 void kernel_main() 
 {
     term_init();
@@ -253,8 +259,5 @@ void kernel_main()
     term_print("Hello, World!\n", 0x0F);
     term_print("This is the start of NOS\n", 0x0A);
 
-    int divideByZeroTest = 10;
-    term_putc(divideByZeroTest/0, 0x0A);
-
-    while(1) {}
+    test_divbyzero();
 }
