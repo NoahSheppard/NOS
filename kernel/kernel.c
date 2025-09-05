@@ -128,13 +128,13 @@ int strlen(const char *str)
 unsigned char importb(unsigned short _port)
 {
     unsigned char rv;
-    __asm__ __volatile__ ("inb %1, %0": "=a" (rv) : "dN" (_port));
+    asm volatile ("inb %1, %0": "=a" (rv) : "dN" (_port));
 }
 
 // Opposite of the function above. Still do NOT understand
 void outportb (unsigned short _port, unsigned char _data)
 {
-    __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
+    asm volatile ("outb %1, %0" : : "dN" (_port), "a" (_data));
 }
 
 void test_terminal_scroll() 
@@ -215,5 +215,5 @@ void kernel_main()
     term_init();
 
     term_print("Hello, World!\n", 0x0F);
-    term_print("This is the start of Linux 2\n", 0x0A);
+    term_print("This is the start of NOS\n", 0x0A);
 }
