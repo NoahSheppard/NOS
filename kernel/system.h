@@ -1,3 +1,5 @@
+#include <stddef.h>
+#include <stdint.h>
 #ifndef __SYSTEM_H
 #define __SYSTEM_H
 
@@ -7,5 +9,9 @@ extern unsigned short *memsetw(unsigned short *dest, unsigned short val, int cou
 extern int strlen(const char *str);
 extern unsigned char importb(unsigned short _port);
 extern void outportb (unsigned short _port, unsigned char _data);
+extern void term_putc(char c, uint8_t color);
+extern void term_init();
+extern void term_print(const char* str, const uint8_t color);
+extern void move_csr(void);
 
 #endif

@@ -10,12 +10,36 @@
 volatile uint16_t* vga_buffer = (uint16_t*)0xB8000;
 const int VGA_COLS = 80;
 const int VGA_ROWS = 25;
+
 // TODO: Have a list of all the lines appended so that when we have scrolling, we can make use of it. 
 //uint16_t stdout_list[];
 
 int term_col = 0;
 int term_row = 0;
 uint8_t term_color = 0x0F; // with colour, the first 4 bits are the background, and the next 4 bits are background
+
+// Used to get data from port (for later, I do NOT understand this so far)
+unsigned char importb(unsigned short _port)
+{
+    unsigned char rv;
+    asm volatile ("inb %1, %0": "=a" (rv) : "dN" (_port));
+}
+
+// Opposite of the function above. Still do NOT understand
+void outportb (unsigned short _port, unsigned char _data)
+{
+    asm volatile ("outb %1, %0" : : "dN" (_port), "a" (_data));
+}
+
+void move_csr(void) 
+{
+    unsigned temp;
+    temp = term_row * 80 + term_col;
+    outportb(0x3D4, 14);
+    outportb(0x3D5, temp >> 8);
+    outportb(0x3D4, 15);
+    outportb(0x3D5, temp);
+}
 
 void term_init() 
 {
@@ -27,6 +51,8 @@ void term_init()
             vga_buffer[index] = ((uint16_t)term_color << 8) | ' ';
         }
     }
+
+    move_csr();
 } 
 
 void term_putc(char c, uint8_t color)
@@ -39,6 +65,14 @@ void term_putc(char c, uint8_t color)
             term_row++;
             // whatever was on the line, put in the stdout list 
             break;
+        }
+    case '\r':
+        {
+            term_col = 0;
+        }
+    case 0x08:
+        {
+            if (term_col != 0) term_col--;
         }
     default:
         {
@@ -67,6 +101,7 @@ void term_putc(char c, uint8_t color)
         }
         term_row--;
     }
+    move_csr();
 }
 
 void term_print(const char* str, const uint8_t color) 
@@ -122,19 +157,6 @@ int strlen(const char *str)
     }
     count++;
     return count; 
-}
-
-// Used to get data from port (for later, I do NOT understand this so far)
-unsigned char importb(unsigned short _port)
-{
-    unsigned char rv;
-    asm volatile ("inb %1, %0": "=a" (rv) : "dN" (_port));
-}
-
-// Opposite of the function above. Still do NOT understand
-void outportb (unsigned short _port, unsigned char _data)
-{
-    asm volatile ("outb %1, %0" : : "dN" (_port), "a" (_data));
 }
 
 void test_terminal_scroll() 
