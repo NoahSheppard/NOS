@@ -7,6 +7,7 @@ extern unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int 
 extern unsigned char *memset(void *dest, unsigned char val, int count);
 extern unsigned short *memsetw(unsigned short *dest, unsigned short val, int count);
 int strcmp(const char* str1, const char* str2);
+int strcmpl(const char* str1, const char* str2, int length);
 extern int strlen(const char *str);
 extern unsigned char importb(unsigned short _port);
 extern void outportb (unsigned short _port, unsigned char _data);

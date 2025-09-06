@@ -24,17 +24,26 @@ void basicterm_return_handler()
     printc('\n');
     command[command_index++] = '\0';
 
-    if (strcmp(command, "clear") == 0)
+    if (strcmpl(command, "clear", 5) == 0)
     {
         clear();
         command_index = 0;
         return;
     }
-
-    printf("You put: ");
-    printf(command);    
-    printc('\n');
-    printf("[NOS]/$ ");
+    else if (strcmpl(command, "echo", 4) == 0)
+    {
+        printf("You put: ");
+        printf(command);    
+        printc('\n');
+        printf("[NOS]/$ ");
+    } 
+    else 
+    {
+        printf("Unknown command: ");
+        printf(command);
+        printc('\n');
+        printf("[NOS]/$ ");
+    }
 
     command_index = 0;
 }

@@ -171,6 +171,23 @@ int strcmp(const char* str1, const char* str2)
     return *str1 - *str2;
 }
 
+int strcmpl(const char* str1, const char* str2, int length) 
+{
+    int count = 0;
+    while (*str1 && (*str1 == *str2) && count != length) {
+        str1++;
+        str2++;
+        count++;
+    }
+
+    if (count == length)
+    {
+        return 0;
+    }
+    
+    return *str1 - *str2;
+}
+
 int strlen(const char *str)
 {
     /* This loops through a caharacter array 'str', returning how
