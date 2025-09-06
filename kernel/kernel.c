@@ -54,6 +54,8 @@ void term_init()
         }
     }
 
+    term_col = 0;
+    term_row = 0;
     move_csr();
 } 
 
@@ -158,6 +160,15 @@ unsigned short *memsetw(unsigned short *dest, unsigned short val, int count)
         dest[i] = val;
     }
     return dest; 
+}
+
+int strcmp(const char* str1, const char* str2) 
+{
+    while (*str1 && (*str1 == *str2)) {
+        str1++;
+        str2++;
+    }
+    return *str1 - *str2;
 }
 
 int strlen(const char *str)
@@ -308,6 +319,8 @@ void kernel_main()
 
     term_print("Hello, World!\n", 0x0F);
     term_print("This is the start of NOS\n", 0x0A);
+
+    basicterm_main();
 
     while (1) {
         asm volatile("hlt");

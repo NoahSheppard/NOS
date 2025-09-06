@@ -103,9 +103,14 @@ void keyboard_handler(struct regs *r)
     {
         // when key is released
     }
+    else if (scancode == 0x1C)
+    {
+        basicterm_return_handler();
+        return;
+    }
     else
     {
-        term_putc(kbdus[scancode], 0x0F);
+        basicterm_key_handler(kbdus[scancode]);
     }
 }
 
