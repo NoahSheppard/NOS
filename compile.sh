@@ -11,6 +11,9 @@ $HOME/opt/cross/bin/i686-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/kernel.c
 $HOME/opt/cross/bin/i686-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/gdt.c -o out/gdt.o
 $HOME/opt/cross/bin/i686-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/idt.c -o out/idt.o
 $HOME/opt/cross/bin/i686-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/isrs.c -o out/isrs.o
+$HOME/opt/cross/bin/i686-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/irq.c -o out/irq.o
+$HOME/opt/cross/bin/i686-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/timer.c -o out/timer.o
+$HOME/opt/cross/bin/i686-elf-gcc -std=gnu99 -ffreestanding -g -c kernel/kb.c -o out/kb.o
 
 echo "Linking"
 $HOME/opt/cross/bin/i686-elf-gcc -ffreestanding -nostdlib -g -T kernel/linker.ld \
@@ -19,6 +22,9 @@ $HOME/opt/cross/bin/i686-elf-gcc -ffreestanding -nostdlib -g -T kernel/linker.ld
     out/gdt.o \
     out/idt.o \
     out/isrs.o \
+    out/irq.o \
+    out/timer.o \
+    out/kb.o \
     -o mykernel.elf -lgcc
 
 cp mykernel.elf iso/boot/kernel.bin

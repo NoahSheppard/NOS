@@ -4,7 +4,7 @@
 #define __SYSTEM_H
 
 extern unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int count);
-extern unsigned char *memset(unsigned char *dest, unsigned char val, int count);
+extern unsigned char *memset(void *dest, unsigned char val, int count);
 extern unsigned short *memsetw(unsigned short *dest, unsigned short val, int count);
 extern int strlen(const char *str);
 extern unsigned char importb(unsigned short _port);
@@ -26,5 +26,17 @@ struct regs
     unsigned int int_no, err_code; // push $x
     unsigned int eip, cs, eflags, useresp, ss; // pushed by cpu automatically
 };
+void irq_install_handler(int irq, void (*handler)(struct regs *r));
+void irq_uninstall_handler(int irq);
+void irq_remap(void);
+void irq_install();
+void irq_handler(struct regs *r);
+
+void timer_phase(int hz);
+void timer_handler(struct regs *r);
+void timer_install();
+void keyboard_installer();
+
+void keyboard_handler(struct regs *r);
 
 #endif

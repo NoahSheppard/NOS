@@ -72,9 +72,21 @@ void term_putc(char c, uint8_t color)
         {
             term_col = 0;
         }
-    case 0x08:
+    case '\b':
         {
-            if (term_col != 0) term_col--;
+            if (term_col != 0)
+            {
+                term_col--;
+                const size_t index = (VGA_COLS * term_row) + term_col;
+                vga_buffer[index] = ((uint16_t)color << 8) | ' ';
+                break; 
+            } 
+            else 
+            {
+                const size_t index = (VGA_COLS * term_row) + term_col;
+                vga_buffer[index] = ((uint16_t)color << 8) | ' ';
+                break; 
+            }
         }
     default:
         {
@@ -123,12 +135,13 @@ unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int count) 
     return dest; 
 }
 
-unsigned char *memset(unsigned char *dest, unsigned char val, int count) 
+unsigned char *memset(void *dest, unsigned char val, int count) 
 {
     // Add code here to set 'count' bytes in 'dest' to 'val', return dest?
-    for (size_t i = 0; i < count; i++)
+    unsigned char *temp = (unsigned char *)dest;
+    for (; count != 0; count--)
     {
-        dest[i] = val;
+        *temp++ = val;
     }
     return dest; 
 }
@@ -189,6 +202,29 @@ void test_terminal_scroll()
     term_print("Line 25\n", 0x0A);
 }
 
+void test_terminal_color()
+{
+    //"colour testing :)";
+    term_putc('c', 0x08);
+    term_putc('o', 0x09);
+    term_putc('l', 0x01);
+    term_putc('o', 0x0A);
+    term_putc('u', 0x02);
+    term_putc('r', 0x0B);
+    term_putc(' ', 0x00);
+    term_putc('t', 0x03);
+    term_putc('e', 0x0C);
+    term_putc('s', 0x04);
+    term_putc('t', 0x0D);
+    term_putc('i', 0x05);
+    term_putc('n', 0x0E);
+    term_putc('g', 0x06);
+    term_putc(' ', 0x0);
+    term_putc(':', 0x0F);
+    term_putc(')', 0x07);
+    term_putc('\n', 0x08);
+}
+
 void test_memcpy()
 {
     char *test_char = "Hello World!\n";
@@ -242,22 +278,38 @@ void test_divbyzero() {
 void kernel_main() 
 {
     term_init();
-    term_print("1. Terminal initialized\n", 0x0F);
+    term_print("1. Terminal initialized\n", 0x0A);
     
-    term_print("2. About to call gdt_install()\n", 0x0A);
+    term_print("2. About to call gdt_install()\n", 0x09);
     gdt_install();
-    term_print("3. gdt_install() completed\n", 0x0C);
+    term_print("3. gdt_install() completed\n", 0x02);
 
-    term_print("4. About to call idt_install()\n", 0x0A);
+    term_print("4. About to call idt_install()\n", 0x09);
     idt_install();
-    term_print("5. idt_install completed\n", 0x0C);
+    term_print("5. idt_install completed\n", 0x02);
 
-    term_print("6. Installing ISRS\n", 0x0A);
+    term_print("6. Installing ISRS\n", 0x09);
     isrs_install();
-    term_print("7. Installed ISRS!\n", 0x0B);
+    term_print("7. Installed ISRS!\n", 0x02);
+
+    term_print("7. Installing IQR's\n", 0x09);
+    irq_install();
+    term_print("  7a. Enabling IQR's\n", 0x0E);
+    asm volatile("sti");
+    term_print("8. Installed+Enabled IQR's!\n", 0x02);
+
+    term_print("9. Installing Timer...\n", 0x09);
+    timer_install();
+    term_print("10. Installed Timer!\n", 0x02);
+
+    term_print("11. Installing Keyboard...\n", 0x09);
+    keyboard_installer();
+    term_print("12. Installed Keyboard!\n", 0x02);
 
     term_print("Hello, World!\n", 0x0F);
     term_print("This is the start of NOS\n", 0x0A);
 
-    test_divbyzero();
+    while (1) {
+        asm volatile("hlt");
+    }
 }
