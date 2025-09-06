@@ -52,9 +52,19 @@ void basicterm_key_handler(char key)
 {
     if (command_index < 255)
     {
-        command[command_index] = key;
-        command_index++;
-        printc(key);
+        if (key == '\b')
+        {
+            if (command_index == 0) return;
+            command_index--;
+            command[command_index] = '\0';
+            printc(key);
+        }
+        else
+        {
+            command[command_index] = key;
+            command_index++;
+            printc(key);
+        }
     }
 }
 

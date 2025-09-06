@@ -13,41 +13,41 @@
 .set MB_CHECKSUM, (0 - (MB_MAGIC + MB_FLAGS))
 
 .section .multiboot
-    .align 4
-    .long MB_MAGIC
-    .long MB_FLAGS
-    .long MB_CHECKSUM
+   .align 4
+   .long MB_MAGIC
+   .long MB_FLAGS
+   .long MB_CHECKSUM
 
 .section .bss
-    .align 16
-    stack_bottom:
-        .skip 4096
-    stack_top:
+   .align 16
+   stack_bottom:
+      .skip 4096
+   stack_top:
 
 .section .text
 start:
-    movl $stack_top, %esp
-    call kernel_main
+   movl $stack_top, %esp
+   call kernel_main
 hang:
-    cli
-    hlt
-    jmp hang
+   cli
+   hlt
+   jmp hang
 
 gdt_flush:
-    lgdt _gp
-    movw $0x10, %ax // 16
-    movw %ax, %ds
-    movw %ax, %es
-    movw %ax, %fs
-    movw %ax, %gs
-    movw %ax, %ss
-    ljmp $0x08, $reload_segments // 8
+   lgdt _gp
+   movw $0x10, %ax // 16
+   movw %ax, %ds
+   movw %ax, %es
+   movw %ax, %fs
+   movw %ax, %gs
+   movw %ax, %ss
+   ljmp $0x08, $reload_segments // 8
 reload_segments:
-    ret
+   ret
 
 idt_load:
-    lidt idtp
-    ret
+   lidt idtp
+   ret
 
 .global isr0
 .global isr1
@@ -232,35 +232,35 @@ isr30:
    push $30
    jmp isr_common_stub
 isr31:
-    cli
-    push $0
-    push $31
-    jmp isr_common_stub
+   cli
+   push $0
+   push $31
+   jmp isr_common_stub
 
 .extern fault_handler
 
 isr_common_stub:
-    pusha
-    push %ds
-    push %es
-    push %fs
-    push %gs
-    movw $0x10, %ax
-    movw %ax, %ds
-    movw %ax, %es
-    movw %ax, %fs
-    movw %ax, %gs
-    movl %esp, %eax
-    push %eax
-    call fault_handler
-    pop %eax
-    pop %gs
-    pop %fs
-    pop %es
-    pop %ds
-    popa
-    addl $8, %esp
-    iret
+   pusha
+   push %ds
+   push %es
+   push %fs
+   push %gs
+   movw $0x10, %ax
+   movw %ax, %ds
+   movw %ax, %es
+   movw %ax, %fs
+   movw %ax, %gs
+   movl %esp, %eax
+   push %eax
+   call fault_handler
+   pop %eax
+   pop %gs
+   pop %fs
+   pop %es
+   pop %ds
+   popa
+   addl $8, %esp
+   iret
 
 .global irq0
 .global irq1
@@ -280,121 +280,121 @@ isr_common_stub:
 .global irq15
 
 irq0: //isr#32
-    cli
-    push $0
-    push $32
-    jmp irq_common_stub
+   cli
+   push $0
+   push $32
+   jmp irq_common_stub
 
 irq1: //33
-    cli
-    push $0
-    push $33
-    jmp irq_common_stub
+   cli
+   push $0
+   push $33
+   jmp irq_common_stub
 
 irq2: //34
-    cli
-    push $0
-    push $34
-    jmp irq_common_stub
+   cli
+   push $0
+   push $34
+   jmp irq_common_stub
 
 irq3: //35
-    cli
-    push $0
-    push $35
-    jmp irq_common_stub
+   cli
+   push $0
+   push $35
+   jmp irq_common_stub
 
 irq4: //36
-    cli
-    push $0
-    push $36
-    jmp irq_common_stub
+   cli
+   push $0
+   push $36
+   jmp irq_common_stub
 
 irq5: //37
-    cli
-    push $0
-    push $37
-    jmp irq_common_stub
+   cli
+   push $0
+   push $37
+   jmp irq_common_stub
 
 irq6: //38
-    cli
-    push $0
-    push $38
-    jmp irq_common_stub
+   cli
+   push $0
+   push $38
+   jmp irq_common_stub
 
 irq7: //39
-    cli
-    push $0
-    push $39
-    jmp irq_common_stub
+   cli
+   push $0
+   push $39
+   jmp irq_common_stub
 
 irq8: //40
-    cli
-    push $0
-    push $40
-    jmp irq_common_stub
+   cli
+   push $0
+   push $40
+   jmp irq_common_stub
 
 irq9: //41
-    cli
-    push $0
-    push $41
-    jmp irq_common_stub
+   cli
+   push $0
+   push $41
+   jmp irq_common_stub
 
 irq10: //42
-    cli
-    push $0
-    push $42
-    jmp irq_common_stub
+   cli
+   push $0
+   push $42
+   jmp irq_common_stub
 
 irq11: //43
-    cli
-    push $0
-    push $43
-    jmp irq_common_stub
+   cli
+   push $0
+   push $43
+   jmp irq_common_stub
 
 irq12: //44
-    cli
-    push $0
-    push $44
-    jmp irq_common_stub
+   cli
+   push $0
+   push $44
+   jmp irq_common_stub
 
 irq13: //45
-    cli
-    push $0
-    push $45
-    jmp irq_common_stub
+   cli
+   push $0
+   push $45
+   jmp irq_common_stub
 
 irq14: //46
-    cli
-    push $0
-    push $46
-    jmp irq_common_stub
+   cli
+   push $0
+   push $46
+   jmp irq_common_stub
 
 irq15: //47
-    cli
-    push $0
-    push $47
-    jmp irq_common_stub
+   cli
+   push $0
+   push $47
+   jmp irq_common_stub
 
 .extern irq_handler
 irq_common_stub:
-    pusha
-    push %ds 
-    push %es
-    push %fs
-    push %gs
-    mov $0x10, %ax
-    mov %ax, %ds
-    mov %ax, %es
-    mov %ax, %fs
-    mov %ax, %gs
-    mov %esp, %eax
-    push %eax
-    call irq_handler
-    pop %eax
-    pop %gs
-    pop %fs
-    pop %es
-    pop %ds
-    popa
-    add $8, %esp
-    iret
+   pusha
+   push %ds 
+   push %es
+   push %fs
+   push %gs
+   mov $0x10, %ax
+   mov %ax, %ds
+   mov %ax, %es
+   mov %ax, %fs
+   mov %ax, %gs
+   mov %esp, %eax
+   push %eax
+   call irq_handler
+   pop %eax
+   pop %gs
+   pop %fs
+   pop %es
+   pop %ds
+   popa
+   add $8, %esp
+   iret
