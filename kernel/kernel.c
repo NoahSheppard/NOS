@@ -348,7 +348,7 @@ void kernel_main()
     term_print("11. Installing Keyboard...\n", 0x09);
     keyboard_installer();
     term_print("12. Installed Keyboard!\n", 0x02);
-
+    
     term_print("\n", 0x0F);
     term_print("[NOS] $ ", 0x0F);
 
