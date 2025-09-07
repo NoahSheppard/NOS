@@ -41,8 +41,10 @@ void basicterm_return_handler()
     }
     else if (strcmpl(command, "echo", 4) == 0)
     {
-        printf("You put: ");
-        printf(command);    
+        if (command_index > 5)
+        {
+            printf(&command[5]);
+        }  
         printc('\n');
         printf(console_prefix);
     } 
