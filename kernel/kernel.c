@@ -348,11 +348,12 @@ void kernel_main()
     term_print("11. Installing Keyboard...\n", 0x09);
     keyboard_installer();
     term_print("12. Installed Keyboard!\n", 0x02);
+    
+    term_print("\n", 0x0F);
+    term_print("[NOS] $ ", 0x0F);
 
-    term_print("Hello, World!\n", 0x0F);
-    term_print("This is the start of NOS\n", 0x0A);
-
-    basicterm_main();
+    //basicterm_main(); As the keyboard driver passes input directly into the basicterm.c functions
+    //This call is no longer required until this is changed, which it should
 
     while (1) {
         asm volatile("hlt");
