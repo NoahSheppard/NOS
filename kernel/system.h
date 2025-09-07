@@ -6,9 +6,10 @@
 extern unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int count);
 extern unsigned char *memset(void *dest, unsigned char val, int count);
 extern unsigned short *memsetw(unsigned short *dest, unsigned short val, int count);
-int strcmp(const char* str1, const char* str2);
-int strcmpl(const char* str1, const char* str2, int length);
+extern int strcmp(const char* str1, const char* str2);
+extern int strcmpl(const char* str1, const char* str2, int length);
 extern int strlen(const char *str);
+extern char* strcpy(char* dest, const char* src, size_t dest_size);
 extern unsigned char importb(unsigned short _port);
 extern void outportb (unsigned short _port, unsigned char _data);
 extern void term_putc(char c, uint8_t color);
@@ -16,11 +17,11 @@ extern void term_init();
 extern void term_print(const char* str, const uint8_t color);
 extern void move_csr(void);
 extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
-void gdt_install();
+extern void gdt_install();
 extern void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags);
-void idt_install();
-void isrs_install();
-void fault_handler();
+extern void idt_install();
+extern void isrs_install();
+extern void fault_handler();
 struct regs
 {
     unsigned int gs, fs, es, ds; // pushed the segments last
@@ -44,8 +45,9 @@ void keyboard_handler(struct regs *r);
 void basicterm_main();
 void basicterm_return_handler();
 void basicterm_key_handler(char key);
-void printf(char* string);
-void printc(char c);
-void clear();
+
+extern void printf(char* string);
+extern void printc(char c);
+extern void clear();
 
 #endif

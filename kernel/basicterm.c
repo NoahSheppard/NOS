@@ -1,7 +1,9 @@
 #include "system.h"
+#include "utils.h"
 
 char command[256];
 int command_index = 0;
+char* console_prefix = "[NOS] $ ";
 
 void printf(char* string) 
 {
@@ -16,13 +18,20 @@ void printc(char c)
 void clear()
 {
     term_init();
-    printf("[NOS]/$ ");
+    printf(console_prefix);
 }
 
 void basicterm_return_handler()
 {
     printc('\n');
     command[command_index++] = '\0';
+
+    if (command_index == 1)
+    {
+        printf(console_prefix);
+        command_index = 0;
+        return;
+    }
 
     if (strcmpl(command, "clear", 5) == 0)
     {
@@ -35,14 +44,14 @@ void basicterm_return_handler()
         printf("You put: ");
         printf(command);    
         printc('\n');
-        printf("[NOS]/$ ");
+        printf(console_prefix);
     } 
     else 
     {
         printf("Unknown command: ");
         printf(command);
         printc('\n');
-        printf("[NOS]/$ ");
+        printf(console_prefix);
     }
 
     command_index = 0;

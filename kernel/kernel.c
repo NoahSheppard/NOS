@@ -201,6 +201,21 @@ int strlen(const char *str)
     return count; 
 }
 
+char* strcpy(char* dest, const char* src, size_t dest_size)
+{
+    if (strlen(src) > dest_size)
+        return NULL; // TODO: Error/Exception 
+    char* original_dest = dest;
+    while (*src != '\0')
+    {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+    *dest = '\0';
+    return original_dest;
+}
+
 void test_terminal_scroll() 
 {
     term_print("Line 1\n", 0x0A);

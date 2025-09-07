@@ -147,7 +147,6 @@ void keyboard_handler(struct regs *r)
     {
         switch (scancode)
         {
-            // 42 54
             case 0xAA: 
             case 0xB6: 
             {
