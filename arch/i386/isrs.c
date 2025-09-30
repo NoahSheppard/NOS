@@ -83,7 +83,7 @@ unsigned char *exception_messages[] =
     "Coprocessor sESgment Overrun Exception", //9
     "Bad TSS Exception", //10
     "Segment not Present Exception", //11
-    "Stack Fauly Exception", //12
+    "Stack Fault Exception", //12
     "General Protection Fault Exception", //13
     "Page Fault Exception", //14
     "Unknwon Interrupt Exception", //15

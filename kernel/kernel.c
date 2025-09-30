@@ -8,17 +8,6 @@
     #error "This code must be compiled with an x86-elf compiler"
 #endif
 
-volatile uint16_t* vga_buffer = (uint16_t*)0xB8000;
-const int VGA_COLS = 80;
-const int VGA_ROWS = 25;
-
-// TODO: Have a list of all the lines appended so that when we have scrolling, we can make use of it. 
-//uint16_t stdout_list[];
-
-int term_col = 0;
-int term_row = 0;
-uint8_t term_color = 0x0F; // with colour, the first 4 bits are the background, and the next 4 bits are background
-
 // Used to get data from port (for later, I do NOT understand this so far)
 unsigned char importb(unsigned short _port)
 {
@@ -31,101 +20,6 @@ unsigned char importb(unsigned short _port)
 void outportb (unsigned short _port, unsigned char _data)
 {
     asm volatile ("outb %1, %0" : : "dN" (_port), "a" (_data));
-}
-
-void move_csr(void) 
-{
-    unsigned temp;
-    temp = term_row * 80 + term_col;
-    outportb(0x3D4, 14);
-    outportb(0x3D5, temp >> 8);
-    outportb(0x3D4, 15);
-    outportb(0x3D5, temp);
-}
-
-void term_init() 
-{
-    for (int col = 0; col < VGA_COLS; col++)
-    {
-        for (int row = 0; row < VGA_ROWS; row++) 
-        {
-            const size_t index = (VGA_COLS * row) + col;
-            vga_buffer[index] = ((uint16_t)term_color << 8) | ' ';
-        }
-    }
-
-    term_col = 0;
-    term_row = 0;
-    move_csr();
-} 
-
-void term_putc(char c, uint8_t color)
-{
-    switch (c)
-    {
-    case '\n':
-        {
-            term_col = 0;
-            term_row++;
-            // whatever was on the line, put in the stdout list 
-            break;
-        }
-    case '\r':
-        {
-            term_col = 0;
-        }
-    case '\b':
-        {
-            if (term_col != 0)
-            {
-                term_col--;
-                const size_t index = (VGA_COLS * term_row) + term_col;
-                vga_buffer[index] = ((uint16_t)color << 8) | ' ';
-                break; 
-            } 
-            else 
-            {
-                const size_t index = (VGA_COLS * term_row) + term_col;
-                vga_buffer[index] = ((uint16_t)color << 8) | ' ';
-                break; 
-            }
-        }
-    default:
-        {
-            const size_t index = (VGA_COLS * term_row) + term_col;
-            vga_buffer[index] = ((uint16_t)color << 8) | c;
-            term_col++;
-            break;       
-        }
-    }
-    if (term_col >= VGA_COLS)
-    {
-        term_col = 0;
-        term_row++;
-        // whatever was on the line, put in the stdout list 
-    }
-
-    if (term_row >= VGA_ROWS)
-    {
-        for (uint8_t colindex = 0; colindex < VGA_COLS; colindex++)
-        {
-            for (uint8_t i = 0; i < VGA_ROWS; i++) {
-                const size_t index = (VGA_COLS * i) + colindex;
-                vga_buffer[index] = vga_buffer[index+VGA_COLS];
-            }
-            
-        }
-        term_row--;
-    }
-    move_csr();
-}
-
-void term_print(const char* str, const uint8_t color) 
-{
-    for (size_t i = 0; str[i] != '\0'; i++)
-    {
-        term_putc(str[i], color);
-    }
 }
 
 unsigned char *memcpy(unsigned char *dest, const unsigned char *src, int count) {
@@ -335,9 +229,9 @@ void kernel_main()
     isrs_install();
     term_print("7. Installed ISRS!\n", 0x02);
 
-    term_print("7. Installing IQR's\n", 0x09);
+    term_print("7. Installing IRQ's\n", 0x09);
     irq_install();
-    term_print("  7a. Enabling IQR's\n", 0x0E);
+    term_print("  7a. Enabling IRQ's\n", 0x0E);
     asm volatile("sti");
     term_print("8. Installed+Enabled IQR's!\n", 0x02);
 
@@ -351,6 +245,8 @@ void kernel_main()
     
     term_print("\n", 0x0F);
     term_print("[NOS] $ ", 0x0F);
+
+    //test_divbyzero();
 
     //basicterm_main(); As the keyboard driver passes input directly into the basicterm.c functions
     //This call is no longer required until this is changed, which it should
