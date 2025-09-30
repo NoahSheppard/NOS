@@ -229,9 +229,9 @@ void kernel_main()
     isrs_install();
     term_print("7. Installed ISRS!\n", 0x02);
 
-    term_print("7. Installing IQR's\n", 0x09);
+    term_print("7. Installing IRQ's\n", 0x09);
     irq_install();
-    term_print("  7a. Enabling IQR's\n", 0x0E);
+    term_print("  7a. Enabling IRQ's\n", 0x0E);
     asm volatile("sti");
     term_print("8. Installed+Enabled IQR's!\n", 0x02);
 
@@ -245,6 +245,8 @@ void kernel_main()
     
     term_print("\n", 0x0F);
     term_print("[NOS] $ ", 0x0F);
+
+    //test_divbyzero();
 
     //basicterm_main(); As the keyboard driver passes input directly into the basicterm.c functions
     //This call is no longer required until this is changed, which it should
